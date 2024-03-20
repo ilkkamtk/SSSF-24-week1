@@ -10,4 +10,11 @@ type Species = {
   image: string;
 };
 
-export {Category, Species};
+type Animal = {
+  animal_id: number;
+  animal_name: string;
+  species: number;
+  birthdate: Date;
+};
+
+export {Category, Species, Animal};
