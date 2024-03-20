@@ -1,4 +1,4 @@
-import e, {Request, Response, NextFunction} from 'express';
+import {Request, Response, NextFunction} from 'express';
 import {Animal} from '../../types/DBTypes';
 import {getAllAnimals, getAnimalById} from '../models/animalModel';
 
