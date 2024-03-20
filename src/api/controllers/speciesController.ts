@@ -4,7 +4,7 @@ import {getAllSpecies} from '../models/speciesModel';
 
 const speciesListGet = async (
   req: Request,
-  res: Response,
+  res: Response<Species[]>,
   next: NextFunction
 ) => {
   try {
