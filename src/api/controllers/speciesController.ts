@@ -1,6 +1,6 @@
 import {Request, Response, NextFunction} from 'express';
 import {Species} from '../../types/DBTypes';
-import {getAllSpecies} from '../models/speciesModel';
+import {getAllSpecies, getSpeciesById} from '../models/speciesModel';
 
 const speciesListGet = async (
   req: Request,
@@ -15,4 +15,18 @@ const speciesListGet = async (
   }
 };
 
-export {speciesListGet};
+const speciesGet = async (
+  req: Request<{id: string}, {}, {}>,
+  res: Response<Species>,
+  next: NextFunction
+) => {
+  try {
+    const id = Number(req.params.id);
+    const category = await getSpeciesById(id);
+    res.json(category);
+  } catch (error) {
+    next(error);
+  }
+};
+
+export {speciesListGet, speciesGet};
