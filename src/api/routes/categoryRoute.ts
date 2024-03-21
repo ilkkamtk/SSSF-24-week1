@@ -1,5 +1,6 @@
 import express from 'express';
 import {
+  categoryDelete,
   categoryGet,
   categoryListGet,
   categoryPost,
@@ -27,6 +28,7 @@ router
     body('category_name').notEmpty().isString().isAlpha().escape(),
     validationErrors,
     categoryPut
-  );
+  )
+  .delete(param('id').isInt(), validationErrors, categoryDelete);
 
 export default router;

@@ -1,5 +1,6 @@
 import {Request, Response, NextFunction} from 'express';
 import {
+  deleteCategory,
   getAllCategories,
   getCategoryById,
   postCategory,
@@ -61,4 +62,24 @@ const categoryPut = async (
   }
 };
 
-export {categoryListGet, categoryGet, categoryPost, categoryPut};
+const categoryDelete = async (
+  req: Request<{id: string}, {}, {}>,
+  res: Response<MessageResponse>,
+  next: NextFunction
+) => {
+  try {
+    const id = Number(req.params.id);
+    const result = await deleteCategory(id);
+    res.json(result);
+  } catch (error) {
+    next(error);
+  }
+};
+
+export {
+  categoryListGet,
+  categoryGet,
+  categoryPost,
+  categoryPut,
+  categoryDelete,
+};
