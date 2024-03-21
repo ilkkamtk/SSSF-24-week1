@@ -43,4 +43,21 @@ const postCategory = async (
   return {message: 'Category added'};
 };
 
-export {getAllCategories, getCategoryById, postCategory};
+const putCategory = async (
+  id: number,
+  category: Pick<Category, 'category_name'>
+) => {
+  const sql = promisePool.format(
+    'UPDATE categories SET category_name = ? WHERE category_id = ?;',
+    [category.category_name, id]
+  );
+  const [headers] = await promisePool.execute<ResultSetHeader>(sql);
+
+  if (headers.affectedRows === 0) {
+    throw new CustomError('Category not updated', 400);
+  }
+
+  return {message: 'Category updated'};
+};
+
+export {getAllCategories, getCategoryById, postCategory, putCategory};
