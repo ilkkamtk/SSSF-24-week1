@@ -1,6 +1,11 @@
 import {Request, Response, NextFunction} from 'express';
-import {getAllCategories, getCategoryById} from '../models/categoryModel';
+import {
+  getAllCategories,
+  getCategoryById,
+  postCategory,
+} from '../models/categoryModel';
 import {Category} from '../../types/DBTypes';
+import {MessageResponse} from '../../types/MessageTypes';
 
 const categoryListGet = async (
   req: Request,
@@ -29,4 +34,17 @@ const categoryGet = async (
   }
 };
 
-export {categoryListGet, categoryGet};
+const categoryPost = async (
+  req: Request<{}, {}, Pick<Category, 'category_name'>>,
+  res: Response<MessageResponse>,
+  next: NextFunction
+) => {
+  try {
+    const result = await postCategory(req.body);
+    res.json(result);
+  } catch (error) {
+    next(error);
+  }
+};
+
+export {categoryListGet, categoryGet, categoryPost};

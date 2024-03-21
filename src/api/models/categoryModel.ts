@@ -1,7 +1,8 @@
 import CustomError from '../../classes/CustomError';
 import promisePool from '../../database/db';
 import {Category} from '../../types/DBTypes';
-import {RowDataPacket} from 'mysql2';
+import {ResultSetHeader, RowDataPacket} from 'mysql2';
+import {MessageResponse} from '../../types/MessageTypes';
 
 const getAllCategories = async () => {
   const [rows] = await promisePool.execute<RowDataPacket[] & Category[]>(
@@ -26,4 +27,20 @@ const getCategoryById = async (id: number) => {
   return rows[0];
 };
 
-export {getAllCategories, getCategoryById};
+const postCategory = async (
+  category: Pick<Category, 'category_name'>
+): Promise<MessageResponse> => {
+  const sql = promisePool.format(
+    'INSERT INTO categories (category_name) VALUES (?);',
+    [category.category_name]
+  );
+  const [headers] = await promisePool.execute<ResultSetHeader>(sql);
+
+  if (headers.affectedRows === 0) {
+    throw new CustomError('Category not added', 400);
+  }
+
+  return {message: 'Category added'};
+};
+
+export {getAllCategories, getCategoryById, postCategory};
