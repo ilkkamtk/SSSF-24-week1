@@ -6,6 +6,8 @@ import {
 } from '../models/categoryModel';
 import {Category} from '../../types/DBTypes';
 import {MessageResponse} from '../../types/MessageTypes';
+import {validationResult} from 'express-validator';
+import CustomError from '../../classes/CustomError';
 
 const categoryListGet = async (
   req: Request,
@@ -39,6 +41,17 @@ const categoryPost = async (
   res: Response<MessageResponse>,
   next: NextFunction
 ) => {
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    const messages: string = errors
+      .array()
+      .map((error) => `${error.msg}: ${error.param}`)
+      .join(', ');
+    console.log('category_post validation', messages);
+    next(new CustomError(messages, 400));
+    return;
+  }
+
   try {
     const result = await postCategory(req.body);
     res.json(result);
