@@ -23,9 +23,9 @@ type Query = {
   pages: Page[];
 };
 
-type RootObject = {
+type ImageFromWikipedia = {
   batchcomplete: boolean;
   query: Query;
 };
 
-export {RootObject, Page, Thumbnail};
+export {ImageFromWikipedia, Page, Thumbnail};

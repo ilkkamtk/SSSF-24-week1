@@ -5,6 +5,7 @@ import {ErrorResponse} from './types/MessageTypes';
 import {validationResult} from 'express-validator';
 import {Species} from './types/DBTypes';
 import fetchData from './lib/fetchData';
+import {ImageFromWikipedia} from './types/ImageFromWikipedia';
 
 const notFound = (req: Request, _res: Response, next: NextFunction) => {
   const error = new CustomError(`🔍 - Not Found - ${req.originalUrl}`, 404);
@@ -48,10 +49,12 @@ const imageFromWikipedia = async (
   try {
     const name = req.body.species_name;
     const url = `https://en.wikipedia.org/w/api.php?action=query&format=json&prop=pageimages&titles=${name}&pithumbsize=640&formatversion=2`;
-    const imageData = await fetchData(url);
-    res.json(imageData);
+    const imageData = await fetchData<ImageFromWikipedia>(url);
+    const thumbnail = imageData.query.pages[0].thumbnail.source;
+    req.body.image = thumbnail;
+    next();
   } catch (error) {
-    next(error);
+    next(new CustomError('Error fetching image from Wikipedia', 500));
   }
 };
 
