@@ -1,10 +1,16 @@
 import express from 'express';
-import {speciesGet, speciesListGet} from '../controllers/speciesController';
+import {
+  speciesDelete,
+  speciesGet,
+  speciesListGet,
+  speciesPost,
+  speciesPut,
+} from '../controllers/speciesController';
 
 const router = express.Router();
 
-router.route('/').get(speciesListGet);
+router.route('/').get(speciesListGet).post(speciesPost);
 
-router.route('/:id').get(speciesGet);
+router.route('/:id').get(speciesGet).put(speciesPut).delete(speciesDelete);
 
 export default router;

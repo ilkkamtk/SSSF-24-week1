@@ -1,6 +1,13 @@
 import {Request, Response, NextFunction} from 'express';
 import {Species} from '../../types/DBTypes';
-import {getAllSpecies, getSpeciesById} from '../models/speciesModel';
+import {
+  deleteSpecies,
+  getAllSpecies,
+  getSpeciesById,
+  postSpecies,
+  putSpecies,
+} from '../models/speciesModel';
+import {MessageResponse} from '../../types/MessageTypes';
 
 const speciesListGet = async (
   req: Request,
@@ -29,4 +36,43 @@ const speciesGet = async (
   }
 };
 
-export {speciesListGet, speciesGet};
+const speciesPost = async (
+  req: Request<{}, {}, Omit<Species, 'species_id'>>,
+  res: Response<MessageResponse>,
+  next: NextFunction
+) => {
+  try {
+    const result = await postSpecies(req.body);
+    res.json(result);
+  } catch (error) {
+    next(error);
+  }
+};
+
+const speciesPut = async (
+  req: Request<{id: string}, {}, Omit<Species, 'species_id'>>,
+  res: Response<MessageResponse>,
+  next: NextFunction
+) => {
+  try {
+    const result = await putSpecies(Number(req.params.id), req.body);
+    res.json(result);
+  } catch (error) {
+    next(error);
+  }
+};
+
+const speciesDelete = async (
+  req: Request<{id: string}, {}, {}>,
+  res: Response<MessageResponse>,
+  next: NextFunction
+) => {
+  try {
+    const result = await deleteSpecies(Number(req.params.id));
+    res.json(result);
+  } catch (error) {
+    next(error);
+  }
+};
+
+export {speciesListGet, speciesGet, speciesPost, speciesPut, speciesDelete};
